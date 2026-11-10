@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Memverifikasi...</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2147;--sky:#dcefff;--sun:#ffd54a;--coral:#ff6a55;--mint:#46d9a0;--muted:#565d8a}
+*{box-sizing:border-box}
+html{background:var(--sky)}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;font-family:Figtree,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 20% 8%,#fff 0,transparent 38%),var(--sky);overflow-x:hidden}
+h1{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif}
+.deco{position:fixed;pointer-events:none;z-index:0}
+.cloud{width:160px;opacity:.95;animation:drift 45s ease-in-out infinite alternate}
+.c1{top:8%;right:-30px}.c2{bottom:10%;left:-40px;width:200px;animation-duration:60s}
+.star{width:30px}.s1{top:16%;left:10%}.s2{bottom:18%;right:12%;width:24px}
+@keyframes drift{to{transform:translateX(-70px)}}
+.card{position:relative;z-index:1;width:100%;max-width:420px;background:#fff;border:3px solid var(--ink);border-radius:26px;padding:60px 22px 26px;box-shadow:6px 6px 0 var(--ink);text-align:center}
+.badge{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border:3px solid var(--ink);border-radius:50%;background:var(--mint);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+.spin{width:38px;height:38px;border:5px solid var(--ink);border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+h1{margin:0 0 8px;font-size:28px;line-height:1.1;letter-spacing:-.02em}
+p{margin:0 auto;color:var(--muted);line-height:1.55;max-width:34ch}
+#fallback{margin-top:16px;font-size:14px}
+a{color:var(--ink);font-weight:700}
+a:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.cloud,.spin{animation:none}}
+</style>
+</head>
+<body>
+
+<svg class="deco cloud c1" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
+<svg class="deco cloud c2" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
+<svg class="deco star s1" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ffd54a" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+<svg class="deco star s2" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ff6a55" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+
+<main class="card">
+  <div class="badge"><div class="spin" id="spin" aria-hidden="true"></div></div>
+  <h1 id="judul">Memverifikasi...</h1>
+  <p id="info">Mohon tunggu sebentar, Anda akan dialihkan otomatis.</p>
+  <p id="fallback" hidden>Tidak berpindah? <a id="manual" href="#" rel="noopener">Klik di sini</a>.</p>
+</main>
+
+<script type="module">
+import { db } from "/firebase.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const WINDOW_MS = 24 * 60 * 60 * 1000;   // masa berlaku verifikasi: 24 jam
+const MIN_MS = 5 * 1000;                 // minimal jeda sejak user diarahkan ke Link 1
+const MAX_MS = 60 * 60 * 1000;           // maksimal jeda yang dianggap wajar (1 jam)
+const STEP_TIMEOUT = 6000;               // jangan biarkan user menunggu terlalu lama
+
+const $ = id => document.getElementById(id);
+const verifId =
+  location.pathname.match(/^\/v\/([^/]+)/)?.[1] ||
+  new URLSearchParams(location.search).get("id");
+
+const safeUrl = u => { try { const x = new URL(u); return x.protocol === "https:" || x.protocol === "http:"; } catch { return false; } };
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+
+function fail(msg) {
+  $("spin").style.display = "none";
+  $("judul").textContent = "Link tidak tersedia";
+  $("info").textContent = msg;
+  document.title = "Link tidak tersedia";
+}
+
+function getDeviceId() {
+  let id = null;
+  try { id = localStorage.getItem("device_id"); } catch {}
+  if (!id) {
+    const m = document.cookie.match(/(?:^|; )device_id=([^;]+)/);
+    id = m ? decodeURIComponent(m[1]) : crypto.randomUUID();
+  }
+  try { localStorage.setItem("device_id", id); } catch {}
+  document.cookie = `device_id=${encodeURIComponent(id)}; max-age=31536000; path=/; SameSite=Lax`;
+  return id;
+}
+
+async function getIp() {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch("https://api.ipify.org?format=json", { signal: ctrl.signal });
+    clearTimeout(timer);
+    return (await res.json()).ip || null;
+  } catch {
+    return null;
+  }
+}
+
+// Catat verifikasi hanya jika pengunjung memang sebelumnya diarahkan ke Link 1
+async function recordVerification() {
+  const deviceId = getDeviceId();
+  const ip = await getIp();
+  const now = Date.now();
+  const keys = ["dev_" + deviceId];
+  if (ip) keys.push("ip_" + ip.replace(/[^a-zA-Z0-9]/g, "_"));
+
+  const snaps = await Promise.all(keys.map(k => getDoc(doc(db, "visitors", k))));
+  const datas = snaps.map(s => (s.exists() ? s.data() : {}));
+
+  // Masih terverifikasi: jangan perpanjang masa 24 jam
+  if (datas.some(d => d.verifiedAt && now - d.verifiedAt < WINDOW_MS)) return;
+
+  const valid = datas.some(d => d.pendingAt && now - d.pendingAt >= MIN_MS && now - d.pendingAt <= MAX_MS);
+  if (!valid) return;
+
+  const payload = { verifiedAt: now, pendingAt: null, verifyId: verifId, ip: ip ?? null, deviceId };
+  await Promise.all(keys.map(k => setDoc(doc(db, "visitors", k), payload, { merge: true })));
+}
+
+async function init() {
+  if (!verifId) return fail("Alamat tidak valid. Periksa kembali link yang Anda buka.");
+
+  let target;
+  try {
+    const snap = await withTimeout(getDoc(doc(db, "verifs", verifId)), 8000);
+    if (!snap.exists()) return fail("Link verifikasi tidak ditemukan.");
+    target = snap.data().target;
+  } catch (err) {
+    console.error(err);
+    return fail("Gagal memuat link. Muat ulang halaman ini.");
+  }
+  if (!safeUrl(target)) return fail("Tujuan link tidak valid.");
+
+  $("manual").href = target;
+  setTimeout(() => { $("fallback").hidden = false; }, 4000);
+
+  try {
+    await withTimeout(recordVerification(), STEP_TIMEOUT);
+  } catch (err) {
+    console.error(err);   // tetap alihkan user walau pencatatan gagal
+  }
+  window.location.replace(target);
+}
+
+init();
+</script>
+</body>
+</html>

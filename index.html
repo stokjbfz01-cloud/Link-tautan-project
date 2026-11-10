@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pos Tautan | Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2147;--sky:#dcefff;--sun:#ffd54a;--coral:#ff6a55;--mint:#46d9a0;--muted:#565d8a}
+*{box-sizing:border-box}
+html{background:var(--sky)}
+body{margin:0;min-height:100vh;font-family:Figtree,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 8%,#fff 0,transparent 38%),var(--sky);overflow-x:hidden}
+h1,h2,.brand,.go{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif}
+
+/* dekorasi */
+.deco{position:fixed;pointer-events:none;z-index:0}
+.cloud{width:150px;opacity:.95;animation:drift 45s ease-in-out infinite alternate}
+.c1{top:7%;left:-30px}.c2{top:60%;right:-40px;width:200px;animation-duration:60s}
+.star{width:34px}.s1{top:16%;right:10%}.s2{bottom:14%;left:8%;width:26px}.s3{top:44%;left:4%;width:18px}
+.trail{width:640px;max-width:95vw;bottom:3%;right:0;opacity:.55}
+@keyframes drift{to{transform:translateX(70px)}}
+
+.wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:26px 18px 70px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.logo{width:46px;height:46px;border:3px solid var(--ink);border-radius:14px;background:var(--sun);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink)}
+.logo svg{width:26px}
+.brand{font-weight:800;font-size:23px}
+.chip{margin-left:auto;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:99px;padding:3px 12px;background:#fff}
+
+.card{background:#fff;border:3px solid var(--ink);border-radius:24px;padding:26px 20px;box-shadow:6px 6px 0 var(--ink)}
+h1{margin:0 0 8px;font-size:32px;line-height:1.08;letter-spacing:-.02em}
+.sub{margin:0 0 22px;color:var(--muted);line-height:1.55;max-width:46ch}
+.field{margin-bottom:18px}
+.tag{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:8px;flex-wrap:wrap}
+.tag span{padding:2px 11px;border:2px solid var(--ink);border-radius:99px;font-size:14px}
+.t1 span{background:var(--sun)}.t2 span{background:var(--mint)}
+.tag small{font-weight:500;color:var(--muted);font-size:14px}
+input{width:100%;font:inherit;padding:13px 14px;border:3px solid var(--ink);border-radius:14px;background:#f5faff;color:var(--ink)}
+input::placeholder{color:#8a93ba}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.go{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;font-size:18px;font-weight:800;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.go svg{width:22px}
+.go:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.go:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+.go:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:4px 4px 0 var(--ink)}
+#msg,#msgV{min-height:22px;margin:12px 0 0;font-weight:600;color:#c0301f}
+
+.list{margin-top:34px}
+h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:22px}
+#count{font:700 14px Figtree,sans-serif;background:var(--ink);color:#fff;border-radius:99px;padding:2px 10px}
+.empty{padding:18px;border:2px dashed var(--ink);border-radius:16px;background:rgba(255,255,255,.6);color:var(--muted);line-height:1.5;margin:0}
+ul{list-style:none;margin:0;padding:0}
+.item{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--ink);border-radius:16px;padding:12px;margin-bottom:10px}
+.item.new{background:#fff6cc}
+.info{min-width:0;flex:1}
+.info a{display:block;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration-thickness:2px}
+.info small{color:var(--muted)}
+.ib{font:700 13px Figtree,sans-serif;color:var(--ink);background:var(--sun);border:2px solid var(--ink);border-radius:10px;padding:7px 11px;cursor:pointer}
+.ib.del{background:#fff}
+.hint{margin:12px 2px 0;font-size:13px;color:var(--muted)}
+
+
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;padding:6px;background:#fff;border:3px solid var(--ink);border-radius:18px}
+.tab{font:700 15px 'Bricolage Grotesque',Figtree,system-ui,sans-serif;color:var(--ink);background:transparent;border:2px solid transparent;border-radius:12px;padding:11px 8px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--sun);border-color:var(--ink)}
+.tab:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.steps{margin:18px 0 0;padding:14px 14px 14px 34px;border:2px dashed var(--ink);border-radius:16px;background:#f5faff;line-height:1.6;color:var(--muted)}
+.item small.t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[hidden]{display:none!important}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:5;background:var(--ink);color:#fff;font-weight:600;padding:12px 20px;border-radius:14px;border:3px solid #fff;transition:.25s;pointer-events:none;max-width:90vw}
+#toast.show{transform:translate(-50%,0);opacity:1}
+@media (prefers-reduced-motion:reduce){.cloud{animation:none}.go,#toast{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- dekorasi latar -->
+<svg class="deco cloud c1" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
+<svg class="deco cloud c2" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
+<svg class="deco star s1" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ffd54a" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+<svg class="deco star s2" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#46d9a0" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+<svg class="deco star s3" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ff6a55" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+<svg class="deco trail" viewBox="0 0 600 200" aria-hidden="true"><path d="M0 180C150 195 200 20 330 60S520 150 590 30" fill="none" stroke="#1d2147" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/><path d="M575 22l30 2-14 26-6-14z" fill="#ff6a55" stroke="#1d2147" stroke-width="3" stroke-linejoin="round"/></svg>
+
+<div class="wrap">
+  <header>
+    <div class="logo"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="4" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="4" stroke-linecap="round"/></svg></div>
+    <div class="brand">Pos Tautan</div>
+    <div class="chip">Admin</div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Menu admin">
+    <button class="tab" role="tab" id="tab-verif" aria-selected="true" aria-controls="panel-verif" data-tab="verif" type="button">Verifikasi IP</button>
+    <button class="tab" role="tab" id="tab-link" aria-selected="false" aria-controls="panel-link" data-tab="link" type="button">Penentuan Link</button>
+  </div>
+
+  <div id="panel-verif" role="tabpanel" aria-labelledby="tab-verif">
+    <main class="card">
+      <h1>Buat link verifikasi</h1>
+      <p class="sub">Tempel link safefileku. Sistem membuat link unik yang mencatat IP pengunjung lalu langsung membuka safefileku.</p>
+
+      <div class="field t1">
+        <label class="tag" for="target"><span>Safefileku</span><small>tujuan akhir download</small></label>
+        <input id="target" type="url" inputmode="url" autocomplete="off" placeholder="https://safefileku.com/download/xxxx">
+      </div>
+
+      <button class="go" id="gen" type="button">
+        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="5" stroke-linecap="round"/></svg>
+        <span id="genText">Generate link verifikasi</span>
+      </button>
+      <p id="msgV" role="alert"></p>
+
+      <ol class="steps">
+        <li>Salin link verifikasi dari daftar di bawah.</li>
+        <li>Bungkus link itu dengan move2link.</li>
+        <li>Tempel hasilnya ke Link 1 di tab Penentuan Link.</li>
+      </ol>
+    </main>
+
+    <section class="list">
+      <h2>Link verifikasi <span id="countV">0</span></h2>
+      <p class="empty" id="emptyV">Belum ada link verifikasi. Tempel link safefileku di atas, lalu klik Generate link verifikasi.</p>
+      <ul id="listV"></ul>
+      <p class="hint">Daftar ini hanya tersimpan di browser ini. Tombol Hapus tidak menghapus link yang sudah aktif.</p>
+    </section>
+  </div>
+
+  <div id="panel-link" role="tabpanel" aria-labelledby="tab-link" hidden>
+    <main class="card">
+      <h1>Terbitkan tautan baru</h1>
+      <p class="sub">Pengunjung baru mendapat Link 1. Setelah lolos verifikasi IP, kunjungan berikutnya dalam 24 jam mendapat Link 2.</p>
+
+      <div class="field t1">
+        <label class="tag" for="link1"><span>Link 1</span><small>move2link, pembungkus link verifikasi</small></label>
+        <input id="link1" type="url" inputmode="url" autocomplete="off" placeholder="https://move2link.com/xxxx">
+      </div>
+      <div class="field t2">
+        <label class="tag" for="link2"><span>Link 2</span><small>safelinku, setelah verifikasi (24 jam)</small></label>
+        <input id="link2" type="url" inputmode="url" autocomplete="off" placeholder="https://safelinku.com/xxxx">
+      </div>
+
+      <button class="go" id="publish" type="button">
+        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="5" stroke-linecap="round"/></svg>
+        <span id="btnText">Publish Tautan</span>
+      </button>
+      <p id="msg" role="alert"></p>
+    </main>
+
+    <section class="list">
+      <h2>Tautan terpublish <span id="count">0</span></h2>
+      <p class="empty" id="empty">Belum ada tautan. Isi Link 1 dan Link 2, lalu klik Publish Tautan.</p>
+      <ul id="list"></ul>
+      <p class="hint">Daftar ini hanya tersimpan di browser ini. Tombol Hapus tidak menghapus tautan yang sudah aktif.</p>
+    </section>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script type="module">
+import { db } from "/firebase.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const $ = id => document.getElementById(id);
+const LISTS = {
+  link:  { key: "published_links", ul: "list",  count: "count",  empty: "empty"  },
+  verif: { key: "verif_links",     ul: "listV", count: "countV", empty: "emptyV" }
+};
+const fresh = { link: null, verif: null };
+
+const load = key => { try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } };
+const save = (key, a) => { try { localStorage.setItem(key, JSON.stringify(a.slice(0, 50))); } catch {} };
+const isValidUrl = v => { try { const u = new URL(v); return u.protocol === "https:" || u.protocol === "http:"; } catch { return false; } };
+const newId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 10);
+
+let timer;
+function toast(text) {
+  const t = $("toast");
+  t.textContent = text;
+  t.classList.add("show");
+  clearTimeout(timer);
+  timer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+}
+
+function btn(label, cls, onClick) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "ib " + cls;
+  b.textContent = label;
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+function render(kind) {
+  const cfg = LISTS[kind];
+  const items = load(cfg.key);
+  const ul = $(cfg.ul);
+  ul.replaceChildren();
+  $(cfg.count).textContent = items.length;
+  $(cfg.empty).hidden = items.length > 0;
+
+  items.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "item" + (item.id === fresh[kind] ? " new" : "");
+
+    const info = document.createElement("div");
+    info.className = "info";
+    const a = document.createElement("a");
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = item.url.replace(/^https?:\/\//, "");
+    const small = document.createElement("small");
+    small.className = "t";
+    let host = "";
+    try { host = item.target ? " | ke " + new URL(item.target).hostname : ""; } catch {}
+    small.textContent = new Date(item.createdAt).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) + host;
+    info.append(a, small);
+
+    li.append(
+      info,
+      btn("Salin", "", async () => toast(await copy(item.url) ? "Tautan disalin" : "Gagal menyalin, salin manual")),
+      btn("Hapus", "del", () => { save(cfg.key, load(cfg.key).filter(x => x.id !== item.id)); render(kind); })
+    );
+    ul.append(li);
+  });
+}
+
+// Tab
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    const name = t.dataset.tab;
+    document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", String(x === t)));
+    $("panel-verif").hidden = name !== "verif";
+    $("panel-link").hidden = name !== "link";
+  });
+});
+
+// Generate link verifikasi
+$("gen").addEventListener("click", async () => {
+  const b = $("gen"), msg = $("msgV");
+  const target = $("target").value.trim();
+  msg.textContent = "";
+
+  if (!isValidUrl(target)) {
+    msg.textContent = "Link safefileku harus berupa URL valid, diawali https://";
+    return;
+  }
+
+  const id = newId();
+  b.disabled = true;
+  $("genText").textContent = "Membuat...";
+
+  try {
+    const createdAt = Date.now();
+    await setDoc(doc(db, "verifs", id), { target, createdAt });
+
+    const url = `${location.origin}/v/${id}`;
+    fresh.verif = id;
+    save(LISTS.verif.key, [{ id, url, target, createdAt }, ...load(LISTS.verif.key)]);
+    render("verif");
+
+    $("target").value = "";
+    toast(await copy(url) ? "Link verifikasi dibuat dan disalin" : "Link verifikasi dibuat");
+  } catch (err) {
+    console.error(err);
+    msg.textContent = "Gagal menyimpan. Periksa konfigurasi Firebase dan aturan Firestore.";
+  } finally {
+    b.disabled = false;
+    $("genText").textContent = "Generate link verifikasi";
+  }
+});
+
+// Publish tautan
+$("publish").addEventListener("click", async () => {
+  const b = $("publish"), msg = $("msg");
+  const link1 = $("link1").value.trim();
+  const link2 = $("link2").value.trim();
+  msg.textContent = "";
+
+  if (!isValidUrl(link1) || !isValidUrl(link2)) {
+    msg.textContent = "Link 1 dan Link 2 harus berupa URL valid, diawali https://";
+    return;
+  }
+
+  const id = newId();
+  b.disabled = true;
+  $("btnText").textContent = "Menerbitkan...";
+
+  try {
+    const createdAt = Date.now();
+    await setDoc(doc(db, "links", id), { link1, link2, createdAt });
+
+    const url = `${location.origin}/d/${id}`;
+    fresh.link = id;
+    save(LISTS.link.key, [{ id, url, createdAt }, ...load(LISTS.link.key)]);
+    render("link");
+
+    $("link1").value = "";
+    $("link2").value = "";
+    toast(await copy(url) ? "Tautan dipublish dan disalin" : "Tautan dipublish");
+  } catch (err) {
+    console.error(err);
+    msg.textContent = "Gagal menyimpan. Periksa konfigurasi Firebase dan aturan Firestore.";
+  } finally {
+    b.disabled = false;
+    $("btnText").textContent = "Publish Tautan";
+  }
+});
+
+render("verif");
+render("link");
+</script>
+</body>
+</html>

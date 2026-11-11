@@ -49,7 +49,7 @@ a:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
 import { db } from "/firebase.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const WINDOW_MS = 16 * 60 * 60 * 1000;   // masa berlaku verifikasi: 24 jam
+const WINDOW_MS = 20 * 60 * 60 * 1000;   // masa berlaku verifikasi: 24 jam
 
 const MIN_MS = 1 * 1000;                 // minimal jeda sejak user diarahkan ke Link 1
 const MAX_MS = 60 * 60 * 1000;           // maksimal jeda yang dianggap wajar (1 jam)

@@ -6,87 +6,234 @@
 <title>Pos Tautan | Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1d2147;--sky:#dcefff;--sun:#ffd54a;--coral:#ff6a55;--mint:#46d9a0;--muted:#565d8a}
+:root{
+  --sky-50:#f0f9ff;--sky-100:#e0f2fe;--sky-200:#bae6fd;--sky-300:#7dd3fc;
+  --sky-400:#38bdf8;--sky-500:#0ea5e9;--sky-600:#0284c7;--sky-900:#0c4a6e;
+  --muted:#4b6b84;--white:#ffffff;--ease:cubic-bezier(.22,1,.36,1);
+}
 *{box-sizing:border-box}
-html{background:var(--sky)}
-body{margin:0;min-height:100vh;font-family:Figtree,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 8%,#fff 0,transparent 38%),var(--sky);overflow-x:hidden}
-h1,h2,.brand,.go{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif}
-
-/* dekorasi */
-.deco{position:fixed;pointer-events:none;z-index:0}
-.cloud{width:150px;opacity:.95;animation:drift 45s ease-in-out infinite alternate}
-.c1{top:7%;left:-30px}.c2{top:60%;right:-40px;width:200px;animation-duration:60s}
-.star{width:34px}.s1{top:16%;right:10%}.s2{bottom:14%;left:8%;width:26px}.s3{top:44%;left:4%;width:18px}
-.trail{width:640px;max-width:95vw;bottom:3%;right:0;opacity:.55}
-@keyframes drift{to{transform:translateX(70px)}}
-
-.wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:26px 18px 70px}
-header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
-.logo{width:46px;height:46px;border:3px solid var(--ink);border-radius:14px;background:var(--sun);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink)}
-.logo svg{width:26px}
-.brand{font-weight:800;font-size:23px}
-.chip{margin-left:auto;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:99px;padding:3px 12px;background:#fff}
-
-.card{background:#fff;border:3px solid var(--ink);border-radius:24px;padding:26px 20px;box-shadow:6px 6px 0 var(--ink)}
-h1{margin:0 0 8px;font-size:32px;line-height:1.08;letter-spacing:-.02em}
-.sub{margin:0 0 22px;color:var(--muted);line-height:1.55;max-width:46ch}
-.field{margin-bottom:18px}
-.tag{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:8px;flex-wrap:wrap}
-.tag span{padding:2px 11px;border:2px solid var(--ink);border-radius:99px;font-size:14px}
-.t1 span{background:var(--sun)}.t2 span{background:var(--mint)}
-.tag small{font-weight:500;color:var(--muted);font-size:14px}
-input{width:100%;font:inherit;padding:13px 14px;border:3px solid var(--ink);border-radius:14px;background:#f5faff;color:var(--ink)}
-input::placeholder{color:#8a93ba}
-input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
-.go{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;font-size:18px;font-weight:800;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s}
-.go svg{width:22px}
-.go:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
-.go:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
-.go:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:4px 4px 0 var(--ink)}
-#msg,#msgV{min-height:22px;margin:12px 0 0;font-weight:600;color:#c0301f}
-
-.list{margin-top:34px}
-h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:22px}
-#count{font:700 14px Figtree,sans-serif;background:var(--ink);color:#fff;border-radius:99px;padding:2px 10px}
-.empty{padding:18px;border:2px dashed var(--ink);border-radius:16px;background:rgba(255,255,255,.6);color:var(--muted);line-height:1.5;margin:0}
-ul{list-style:none;margin:0;padding:0}
-.item{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--ink);border-radius:16px;padding:12px;margin-bottom:10px}
-.item.new{background:#fff6cc}
-.info{min-width:0;flex:1}
-.info a{display:block;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration-thickness:2px}
-.info small{color:var(--muted)}
-.ib{font:700 13px Figtree,sans-serif;color:var(--ink);background:var(--sun);border:2px solid var(--ink);border-radius:10px;padding:7px 11px;cursor:pointer}
-.ib.del{background:#fff}
-.hint{margin:12px 2px 0;font-size:13px;color:var(--muted)}
-
-
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;padding:6px;background:#fff;border:3px solid var(--ink);border-radius:18px}
-.tab{font:700 15px 'Bricolage Grotesque',Figtree,system-ui,sans-serif;color:var(--ink);background:transparent;border:2px solid transparent;border-radius:12px;padding:11px 8px;cursor:pointer}
-.tab[aria-selected="true"]{background:var(--sun);border-color:var(--ink)}
-.tab:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
-.steps{margin:18px 0 0;padding:14px 14px 14px 34px;border:2px dashed var(--ink);border-radius:16px;background:#f5faff;line-height:1.6;color:var(--muted)}
-.item small.t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html{background:var(--sky-50)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  color:var(--sky-900);overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(180deg,#f0f9ff 0%,#ffffff 50%,#e0f2fe 100%);
+}
 [hidden]{display:none!important}
-#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:5;background:var(--ink);color:#fff;font-weight:600;padding:12px 20px;border-radius:14px;border:3px solid #fff;transition:.25s;pointer-events:none;max-width:90vw}
-#toast.show{transform:translate(-50%,0);opacity:1}
-@media (prefers-reduced-motion:reduce){.cloud{animation:none}.go,#toast{transition:none}}
+
+/* latar belakang lembut */
+.bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.55;will-change:transform;animation:float 16s ease-in-out infinite alternate}
+.b1{width:360px;height:360px;background:var(--sky-300);top:-120px;right:-100px}
+.b2{width:300px;height:300px;background:var(--sky-200);bottom:-110px;left:-90px;animation-duration:20s}
+.b3{width:180px;height:180px;background:var(--sky-100);top:48%;left:-40px;animation-duration:24s}
+@keyframes float{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(30px,-24px) scale(1.08)}
+}
+.dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--sky-400);opacity:.45;animation:bob 5s ease-in-out infinite}
+.d1{top:14%;left:12%}
+.d2{bottom:18%;right:14%;width:7px;height:7px;background:var(--sky-500);animation-delay:-2s}
+.d3{top:62%;right:8%;width:6px;height:6px;animation-delay:-3.5s}
+@keyframes bob{50%{transform:translateY(-14px)}}
+
+.wrap{
+  position:relative;z-index:1;max-width:600px;margin:0 auto;padding:28px 18px 72px;
+  animation:rise .7s var(--ease) backwards;
+}
+@keyframes rise{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* header */
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px;animation:fadeUp .6s var(--ease) .05s backwards}
+.logo{
+  width:46px;height:46px;border-radius:14px;flex:none;
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  border:3px solid var(--white);
+  display:grid;place-items:center;
+  box-shadow:0 12px 24px -10px rgba(2,132,199,.65);
+}
+.logo svg{width:24px;height:24px}
+.brand{font-weight:800;font-size:22px;color:var(--sky-900);letter-spacing:-.01em}
+.chip{
+  margin-left:auto;font-size:12.5px;font-weight:700;color:var(--sky-600);
+  background:var(--white);border:1px solid var(--sky-200);border-radius:999px;padding:5px 12px;
+}
+
+/* tab */
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;padding:6px;
+  background:var(--white);border:1px solid var(--sky-200);border-radius:18px;
+  box-shadow:0 10px 24px -16px rgba(2,132,199,.4);
+  animation:fadeUp .6s var(--ease) .1s backwards;
+}
+.tab{
+  font:700 14.5px 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--muted);
+  background:transparent;border:none;border-radius:12px;padding:11px 8px;cursor:pointer;
+  transition:background .35s var(--ease),color .35s var(--ease),box-shadow .35s var(--ease),transform .25s var(--ease);
+}
+.tab:hover:not([aria-selected="true"]){background:var(--sky-50);color:var(--sky-900)}
+.tab:active{transform:scale(.98)}
+.tab[aria-selected="true"]{
+  color:var(--white);
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  box-shadow:0 10px 20px -10px rgba(2,132,199,.8);
+}
+.tab:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--sky-300);outline-offset:2px}
+
+/* panel dengan animasi masuk saat tab berganti */
+#panel-verif:not([hidden]),#panel-link:not([hidden]){animation:panelIn .55s var(--ease)}
+@keyframes panelIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* kartu form */
+.card{
+  background:var(--white);border:1px solid var(--sky-200);border-radius:26px;padding:26px 22px;
+  box-shadow:0 24px 50px -24px rgba(14,165,233,.4),0 0 0 6px rgba(255,255,255,.6);
+}
+h1{margin:0 0 8px;font-size:26px;line-height:1.2;font-weight:800;letter-spacing:-.02em;color:var(--sky-900)}
+.sub{margin:0 0 22px;color:var(--muted);line-height:1.6;max-width:46ch;font-size:15px}
+
+.field{margin-bottom:18px}
+.tag{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:8px;flex-wrap:wrap;color:var(--sky-900)}
+.tag span{
+  padding:3px 11px;border-radius:999px;font-size:13px;
+  background:var(--sky-100);color:var(--sky-600);border:1px solid var(--sky-200);
+}
+.t2 span{background:var(--sky-500);color:var(--white);border-color:var(--sky-500)}
+.tag small{font-weight:500;color:var(--muted);font-size:13.5px}
+
+input{
+  width:100%;font:inherit;font-size:15px;padding:13px 14px;
+  border:1.5px solid var(--sky-200);border-radius:14px;background:var(--sky-50);color:var(--sky-900);
+  transition:border-color .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease);
+}
+input:hover{border-color:var(--sky-300)}
+input:focus{outline:none;border-color:var(--sky-500);background:var(--white);box-shadow:0 0 0 4px rgba(14,165,233,.18)}
+input::placeholder{color:#8aa6ba}
+
+/* tombol utama */
+.go{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px;font:inherit;font-size:16.5px;font-weight:700;color:var(--white);
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  border:none;border-radius:16px;cursor:pointer;
+  box-shadow:0 12px 24px -10px rgba(2,132,199,.7);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease),filter .3s var(--ease);
+}
+.go svg{width:20px;height:20px;flex:none}
+.go:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(2,132,199,.75);filter:brightness(1.04)}
+.go:active:not(:disabled){transform:translateY(1px) scale(.99);box-shadow:0 6px 14px -8px rgba(2,132,199,.7)}
+.go:disabled{opacity:.65;cursor:wait;box-shadow:none;animation:breath 1.4s ease-in-out infinite}
+@keyframes breath{50%{opacity:.82}}
+
+#msg,#msgV{min-height:22px;margin:12px 0 0;font-weight:600;font-size:14px;color:#dc2626}
+
+/* langkah */
+.steps{
+  margin:20px 0 0;padding:16px 16px 16px 36px;border:1px solid var(--sky-200);border-radius:16px;
+  background:var(--sky-50);line-height:1.65;color:var(--muted);font-size:14px;
+}
+.steps li::marker{color:var(--sky-600);font-weight:700}
+
+/* daftar */
+.list{margin-top:32px;animation:fadeUp .6s var(--ease) .15s backwards}
+h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:20px;font-weight:800;color:var(--sky-900)}
+h2 span{
+  font:700 13px 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--white);
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  border-radius:999px;padding:2px 10px;min-width:28px;text-align:center;
+}
+.empty{
+  padding:20px;border:1.5px dashed var(--sky-300);border-radius:16px;background:var(--white);
+  color:var(--muted);line-height:1.55;margin:0;font-size:14px;
+}
+ul{list-style:none;margin:0;padding:0}
+.item{
+  display:flex;align-items:center;gap:10px;background:var(--white);
+  border:1px solid var(--sky-200);border-radius:16px;padding:13px 14px;margin-bottom:10px;
+  box-shadow:0 6px 16px -12px rgba(2,132,199,.4);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease);
+  animation:itemIn .5s var(--ease) backwards;
+}
+@keyframes itemIn{
+  from{opacity:0;transform:translateY(10px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.item:hover{transform:translateY(-2px);box-shadow:0 14px 26px -14px rgba(2,132,199,.5);border-color:var(--sky-300)}
+.item.new{background:linear-gradient(135deg,var(--sky-50),var(--sky-100));border-color:var(--sky-400)}
+.info{min-width:0;flex:1}
+.info a{
+  display:block;font-weight:700;color:var(--sky-900);text-decoration:none;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .25s;
+}
+.info a:hover{color:var(--sky-600);text-decoration:underline;text-decoration-thickness:2px}
+.info small{color:var(--muted);font-size:13px}
+small.t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.ib{
+  flex:none;font:700 13px 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--white);
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  border:none;border-radius:10px;padding:8px 13px;cursor:pointer;
+  box-shadow:0 8px 16px -10px rgba(2,132,199,.7);
+  transition:transform .25s var(--ease),filter .25s,box-shadow .25s;
+}
+.ib:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 10px 18px -10px rgba(2,132,199,.8)}
+.ib:active{transform:translateY(1px) scale(.97)}
+.ib.del{background:var(--white);color:var(--sky-900);border:1px solid var(--sky-200);box-shadow:none}
+.ib.del:hover{background:var(--sky-50);border-color:var(--sky-300)}
+
+.hint{margin:14px 2px 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:26px;z-index:5;
+  transform:translate(-50%,30px) scale(.96);opacity:0;pointer-events:none;
+  background:var(--sky-900);color:var(--white);font-weight:600;font-size:14px;
+  padding:12px 20px;border-radius:14px;max-width:90vw;
+  box-shadow:0 18px 36px -14px rgba(12,74,110,.6);
+  transition:transform .45s var(--ease),opacity .45s var(--ease);
+}
+#toast.show{transform:translate(-50%,0) scale(1);opacity:1}
+
+@media (max-width:420px){
+  .card{padding:22px 16px}
+  h1{font-size:23px}
+  .brand{font-size:20px}
+  .tab{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
 </style>
 </head>
 <body>
 
-<!-- dekorasi latar -->
-<svg class="deco cloud c1" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
-<svg class="deco cloud c2" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
-<svg class="deco star s1" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ffd54a" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
-<svg class="deco star s2" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#46d9a0" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
-<svg class="deco star s3" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ff6a55" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
-<svg class="deco trail" viewBox="0 0 600 200" aria-hidden="true"><path d="M0 180C150 195 200 20 330 60S520 150 590 30" fill="none" stroke="#1d2147" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/><path d="M575 22l30 2-14 26-6-14z" fill="#ff6a55" stroke="#1d2147" stroke-width="3" stroke-linejoin="round"/></svg>
+<!-- latar belakang -->
+<div class="bg" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="dot d1"></span>
+  <span class="dot d2"></span>
+  <span class="dot d3"></span>
+</div>
 
 <div class="wrap">
   <header>
-    <div class="logo"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="4" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="4" stroke-linecap="round"/></svg></div>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 60 60"><path d="M4 30L56 5 40 56 30 36z" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+    </div>
     <div class="brand">Pos Tautan</div>
     <div class="chip">Admin</div>
   </header>
@@ -107,7 +254,7 @@ ul{list-style:none;margin:0;padding:0}
       </div>
 
       <button class="go" id="gen" type="button">
-        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
         <span id="genText">Generate link verifikasi</span>
       </button>
       <p id="msgV" role="alert"></p>
@@ -142,7 +289,7 @@ ul{list-style:none;margin:0;padding:0}
       </div>
 
       <button class="go" id="publish" type="button">
-        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="#fff" stroke="#1d2147" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#1d2147" stroke-width="5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M4 30L56 5 40 56 30 36z" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M56 5L30 36" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
         <span id="btnText">Publish Tautan</span>
       </button>
       <p id="msg" role="alert"></p>
@@ -205,9 +352,10 @@ function render(kind) {
   $(cfg.count).textContent = items.length;
   $(cfg.empty).hidden = items.length > 0;
 
-  items.forEach(item => {
+  items.forEach((item, i) => {
     const li = document.createElement("li");
     li.className = "item" + (item.id === fresh[kind] ? " new" : "");
+    li.style.animationDelay = (i * 0.05) + "s";
 
     const info = document.createElement("div");
     info.className = "info";

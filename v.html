@@ -7,39 +7,134 @@
 <title>Memverifikasi...</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1d2147;--sky:#dcefff;--sun:#ffd54a;--coral:#ff6a55;--mint:#46d9a0;--muted:#565d8a}
+:root{
+  --sky-50:#f0f9ff;--sky-100:#e0f2fe;--sky-200:#bae6fd;--sky-300:#7dd3fc;
+  --sky-400:#38bdf8;--sky-500:#0ea5e9;--sky-600:#0284c7;--sky-900:#0c4a6e;
+  --muted:#4b6b84;--white:#ffffff;--ease:cubic-bezier(.22,1,.36,1);
+}
 *{box-sizing:border-box}
-html{background:var(--sky)}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;font-family:Figtree,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 20% 8%,#fff 0,transparent 38%),var(--sky);overflow-x:hidden}
-h1{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif}
-.deco{position:fixed;pointer-events:none;z-index:0}
-.cloud{width:160px;opacity:.95;animation:drift 45s ease-in-out infinite alternate}
-.c1{top:8%;right:-30px}.c2{bottom:10%;left:-40px;width:200px;animation-duration:60s}
-.star{width:30px}.s1{top:16%;left:10%}.s2{bottom:18%;right:12%;width:24px}
-@keyframes drift{to{transform:translateX(-70px)}}
-.card{position:relative;z-index:1;width:100%;max-width:420px;background:#fff;border:3px solid var(--ink);border-radius:26px;padding:60px 22px 26px;box-shadow:6px 6px 0 var(--ink);text-align:center}
-.badge{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border:3px solid var(--ink);border-radius:50%;background:var(--mint);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
-.spin{width:38px;height:38px;border:5px solid var(--ink);border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
+html{background:var(--sky-50)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;
+  padding:32px 16px;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  color:var(--sky-900);overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(180deg,#f0f9ff 0%,#ffffff 55%,#e0f2fe 100%);
+}
+
+/* latar belakang lembut */
+.bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.6;will-change:transform;animation:float 16s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--sky-300);top:-110px;left:-90px}
+.b2{width:280px;height:280px;background:var(--sky-200);bottom:-100px;right:-80px;animation-duration:20s}
+.b3{width:160px;height:160px;background:var(--sky-100);top:55%;left:70%;animation-duration:24s}
+@keyframes float{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(30px,-24px) scale(1.08)}
+}
+.dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--sky-400);opacity:.5;animation:bob 5s ease-in-out infinite}
+.d1{top:18%;right:16%}
+.d2{bottom:20%;left:14%;width:7px;height:7px;background:var(--sky-500);animation-delay:-2s}
+.d3{top:30%;left:8%;width:6px;height:6px;animation-delay:-3.5s}
+@keyframes bob{50%{transform:translateY(-14px)}}
+
+/* kartu utama */
+.card{
+  position:relative;z-index:1;width:100%;max-width:420px;
+  background:var(--white);
+  border:1px solid var(--sky-200);
+  border-radius:28px;
+  padding:60px 26px 28px;
+  text-align:center;
+  box-shadow:0 24px 60px -18px rgba(14,165,233,.35),0 0 0 6px rgba(255,255,255,.65);
+  animation:rise .8s var(--ease) backwards;
+}
+@keyframes rise{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* badge ikon dengan cincin putar */
+.badge{
+  position:absolute;top:-46px;left:50%;margin-left:-44px;
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  border:4px solid var(--white);
+  display:grid;place-items:center;
+  box-shadow:0 14px 28px -8px rgba(2,132,199,.55);
+  animation:pop .8s cubic-bezier(.34,1.56,.64,1) .15s backwards;
+}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.badge svg{
+  width:34px;height:34px;stroke:#fff;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.ring{
+  position:absolute;inset:-9px;border-radius:50%;
+  border:3px solid var(--sky-200);border-top-color:var(--sky-600);
+  animation:spin 1s linear infinite;
+}
 @keyframes spin{to{transform:rotate(1turn)}}
-h1{margin:0 0 8px;font-size:28px;line-height:1.1;letter-spacing:-.02em}
-p{margin:0 auto;color:var(--muted);line-height:1.55;max-width:34ch}
-#fallback{margin-top:16px;font-size:14px}
-a{color:var(--ink);font-weight:700}
-a:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){.cloud,.spin{animation:none}}
+
+/* teks */
+h1{
+  margin:0 0 8px;font-size:26px;line-height:1.2;font-weight:800;letter-spacing:-.02em;color:var(--sky-900);
+  animation:fadeUp .7s var(--ease) .2s backwards;
+}
+#info{
+  margin:0 auto;color:var(--muted);line-height:1.6;max-width:34ch;font-size:15px;
+  animation:fadeUp .7s var(--ease) .3s backwards;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* tautan manual */
+#fallback{
+  margin:20px 0 0;font-size:14px;color:var(--muted);line-height:1.6;
+  animation:fadeUp .6s var(--ease) backwards;
+}
+#fallback[hidden]{display:none}
+#manual{
+  display:inline-block;margin-left:4px;padding:10px 18px;border-radius:999px;
+  color:#fff;text-decoration:none;font-weight:700;
+  background:linear-gradient(135deg,var(--sky-400),var(--sky-600));
+  box-shadow:0 10px 20px -10px rgba(2,132,199,.7);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+#manual:hover{transform:translateY(-2px);box-shadow:0 14px 24px -10px rgba(2,132,199,.75)}
+#manual:active{transform:translateY(1px)}
+#manual:focus-visible{outline:3px solid var(--sky-300);outline-offset:3px}
+
+@media (max-width:380px){
+  .card{padding:52px 18px 22px}
+  h1{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
 </style>
 </head>
 <body>
 
-<svg class="deco cloud c1" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
-<svg class="deco cloud c2" viewBox="0 0 140 70" aria-hidden="true"><g fill="#fff"><circle cx="40" cy="42" r="22"/><circle cx="70" cy="30" r="28"/><circle cx="102" cy="42" r="22"/><rect x="40" y="42" width="62" height="22" rx="11"/></g></svg>
-<svg class="deco star s1" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ffd54a" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
-<svg class="deco star s2" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1 10 8 17 18 18-10 1-17 8-18 18-1-10-8-17-18-18 10-1 17-8 18-18z" fill="#ff6a55" stroke="#1d2147" stroke-width="2.5" stroke-linejoin="round"/></svg>
+<!-- latar belakang -->
+<div class="bg" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="dot d1"></span>
+  <span class="dot d2"></span>
+  <span class="dot d3"></span>
+</div>
 
 <main class="card">
-  <div class="badge"><div class="spin" id="spin" aria-hidden="true"></div></div>
+  <div class="badge" aria-hidden="true">
+    <span class="ring" id="spin"></span>
+    <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5C8 19.2 5 15.5 5 11V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+  </div>
   <h1 id="judul">Memverifikasi...</h1>
   <p id="info">Mohon tunggu sebentar, Anda akan dialihkan otomatis.</p>
   <p id="fallback" hidden>Tidak berpindah? <a id="manual" href="#" rel="noopener">Klik di sini</a>.</p>
